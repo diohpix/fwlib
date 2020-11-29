@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.13.4)
+
 # CPP required only for tests
 project(AnotherFanucExample LANGUAGES C CXX VERSION 0.1)
 
@@ -6,13 +7,54 @@ project(AnotherFanucExample LANGUAGES C CXX VERSION 0.1)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # for fwlib32.h header
-include_directories("${CMAKE_SOURCE_DIR}/../")
+#include_directories("${CMAKE_SOURCE_DIR}/../")
+
+if (WIN32)
+  set(output_dir "${CMAKE_BINARY_DIR}/bin")
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${output_dir})
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${output_dir})
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${output_dir})
+  # Second, for multi-config builds (e.g. msvc)
+  foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
+      string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG)
+      set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${output_dir})
+      set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${output_dir})
+      set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${output_dir})
+  endforeach(OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES)
+
+
+  add_library(fwlib32 SHARED IMPORTED)
+  set_target_properties(fwlib32 PROPERTIES
+      LINKER_LANGUAGE C
+      PREFIX ""
+      SUFFIX ""
+      IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/../Fwlib32.dll"
+      IMPORTED_IMPLIB "${CMAKE_SOURCE_DIR}/../Fwlib32.lib"
+      INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/../"
+  )
+
+  # requires manually building libconfig
+  # `mkdir build` and `cd build`
+  # `cmake -A Win32 ..`
+  # `cmake --build . --config Release`
+  add_library(config SHARED IMPORTED)
+  set_target_properties(config PROPERTIES
+      LINKER_LANGUAGE C
+      PREFIX ""
+      SUFFIX ""
+      IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/extern/libconfig/build/out/Release/libconfig.dll"
+      IMPORTED_IMPLIB "${CMAKE_SOURCE_DIR}/extern/libconfig/build/out/Release/libconfig.lib"
+      INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/extern/libconfig/lib"
+  )
+else()
+  find_library(FWLIB NAMES fwlib32 HINTS "${CMAKE_SOURCE_DIR}/../" REQUIRED)
+endif()
 
 add_subdirectory(src)
 
-enable_testing()
-include(GoogleTest)
-add_subdirectory(test)
+#enable_testing()
+#include(GoogleTest)
+#add_subdirectory(test)
 
 set_target_properties(fanuc_example
   PROPERTIES

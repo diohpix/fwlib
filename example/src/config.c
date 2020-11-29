@@ -1,17 +1,54 @@
 #include "./config.h"
 
+#ifdef _WIN32
+#else
 #include <getopt.h>
+#endif
 #include <libconfig.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
+const Config default_config = {"127.0.0.1", 8193};
+
+#ifdef _WIN32
+int read_arg_config(int argc, char *argv[], Config *conf) {
+  char ip[100] = "";
+  int tmp;
+  int port = 0;
+  // ip port config
+  if (argc < 2) {
+    // do nothing, use defaults
+    return 0;
+
+  } else if (argc == 2) {
+    // first arg is a config file
+    if (read_file_config(argv[1], conf)) {
+      // invalid config file
+      return 1;
+    }
+    return 0;
+
+  } else if (argc == 3) {
+    // first arg is ip, second arg is port
+    snprintf(ip, 100, "%s", argv[1]);
+    tmp = atoi(argv[2]);
+    if (tmp < 1 || tmp > 65535) {
+      // invalid port
+    }
+    port = tmp;
+    return 0;
+
+  } else {
+    return 0;
+  }
+  return 0;
+}
+#else
 static struct option options[] = {{"ip", required_argument, NULL, 'h'},
                                   {"port", required_argument, NULL, 'p'},
                                   {"config", required_argument, NULL, 'c'},
                                   {NULL, 0, NULL, 0}};
-
-const Config default_config = {"127.0.0.1", 8193};
 
 int read_arg_config(int argc, char *argv[], Config *conf) {
   int c;
@@ -25,7 +62,7 @@ int read_arg_config(int argc, char *argv[], Config *conf) {
     switch (c) {
       case 'h':
         ip_flag = true;
-        strncpy(ip, optarg, 100);
+        snprintf(ip, 100, "%s", optarg);
         break;
 
       case 'p':
@@ -49,7 +86,7 @@ int read_arg_config(int argc, char *argv[], Config *conf) {
   }
 
   if (ip_flag) {
-    strncpy(conf->ip, ip, 100);
+    snprintf(conf->ip, 100, "%s", ip);
   }
   if (port != 0) {
     conf->port = port;
@@ -57,13 +94,33 @@ int read_arg_config(int argc, char *argv[], Config *conf) {
 
   return 0;
 }
+#endif
 
+#ifdef _WIN32
+int read_env_config(Config *conf) {
+  int iTmp;
+  char buf[100] = "";
+  char *pTmp = (char *)buf;
+  size_t n;
+
+  n = 100;
+  if (_dupenv_s(&pTmp, &n, "DEVICE_IP") == 0 && pTmp != NULL) {
+    snprintf(conf->ip, 100, "%s", pTmp);
+  }
+  n = 100;
+  if (_dupenv_s(&pTmp, &n, "DEVICE_PORT") == 0 && pTmp != NULL && (iTmp = atoi(pTmp)) > 0 && iTmp < 65535) {
+    conf->port = iTmp;
+  }
+
+  return 0;
+}
+#else
 int read_env_config(Config *conf) {
   int iTmp;
   char *pTmp;
 
   if ((pTmp = getenv("DEVICE_IP")) != NULL) {
-    strcpy(conf->ip, pTmp);
+    snprintf(conf->ip, 100, "%s", pTmp);
   }
 
   if (((pTmp = getenv("DEVICE_PORT")) != NULL) && (iTmp = atoi(pTmp)) > 0) {
@@ -72,6 +129,7 @@ int read_env_config(Config *conf) {
 
   return 0;
 }
+#endif
 
 int read_file_config(const char *cfg_file, Config *conf) {
   config_t cfg;
@@ -86,7 +144,7 @@ int read_file_config(const char *cfg_file, Config *conf) {
   }
 
   if (config_lookup_string(&cfg, "ip", &tmp) == CONFIG_TRUE) {
-    strcpy(conf->ip, tmp);
+    snprintf(conf->ip, 100, "%s", tmp);
   }
   config_lookup_int(&cfg, "port", &conf->port);
 
