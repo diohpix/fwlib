@@ -1,6 +1,9 @@
 name: CMake
 
-on: [push]
+on:
+  push:
+    paths:
+    - 'example/**'
 
 env:
   BUILD_TYPE: Release

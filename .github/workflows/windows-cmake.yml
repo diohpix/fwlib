@@ -1,6 +1,9 @@
 name: Windows CMake
 
-on: [push]
+on:
+  push:
+    paths:
+    - 'example/**'
 
 env:
   BUILD_TYPE: Release
@@ -28,7 +31,7 @@ jobs:
     - name: Configure CMake
       working-directory: ${{runner.workspace}}/example/build
       shell: powershell
-      run: cmake -A Win32 -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
+      run: cmake -A Win32 -DCMAKE_BUILD_TYPE=$BUILD_TYPE $env:GITHUB_WORKSPACE/example
 
     - name: Build
       working-directory: ${{runner.workspace}}/example/build
