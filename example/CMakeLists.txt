@@ -5,12 +5,11 @@ project(AnotherFanucExample LANGUAGES C CXX VERSION 0.1)
 
 # for IDE
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# fix for gtest
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-# for fwlib32.h header
-#include_directories("${CMAKE_SOURCE_DIR}/../")
-
 if (WIN32)
+  # remove obnoxious Release/Debug folders added by msvc
   set(output_dir "${CMAKE_BINARY_DIR}/bin")
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${output_dir})
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${output_dir})
@@ -23,16 +22,6 @@ if (WIN32)
       set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${output_dir})
   endforeach(OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES)
 
-
-  add_library(fwlib32 SHARED IMPORTED)
-  set_target_properties(fwlib32 PROPERTIES
-      LINKER_LANGUAGE C
-      PREFIX ""
-      SUFFIX ""
-      IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/../Fwlib32.dll"
-      IMPORTED_IMPLIB "${CMAKE_SOURCE_DIR}/../Fwlib32.lib"
-      INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/../"
-  )
 
   # requires manually building libconfig
   # `mkdir build` and `cd build`
@@ -47,12 +36,6 @@ if (WIN32)
       IMPORTED_IMPLIB "${CMAKE_SOURCE_DIR}/extern/libconfig/build/out/Release/libconfig.lib"
       INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/extern/libconfig/lib"
   )
-else()
-  find_library(FWLIB NAMES fwlib32 libfwlib32 HINTS "${CMAKE_SOURCE_DIR}/../" REQUIRED)
-  add_library(fwlib32 SHARED IMPORTED)
-  set_target_properties(fwlib32 PROPERTIES
-    IMPORTED_LOCATION "${FWLIB}"
-    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/../")
 endif()
 
 add_subdirectory(src)

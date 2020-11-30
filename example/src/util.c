@@ -5,7 +5,7 @@
 
 #include "./config.h"
 
-int retrieve_id(Config *conf, char *cncID) {
+int retrieve_id(Config *conf, char *cnc_id) {
   int allocated = 0;
   int ret = 0;
   unsigned short libh;
@@ -32,7 +32,7 @@ int retrieve_id(Config *conf, char *cncID) {
     goto cleanup;
   }
 
-  snprintf(cncID, 40, "%08x-%08x-%08x-%08x", cnc_ids[0], cnc_ids[1], cnc_ids[2],
+  snprintf(cnc_id, 40, "%08x-%08x-%08x-%08x", cnc_ids[0], cnc_ids[1], cnc_ids[2],
           cnc_ids[3]);
 
 cleanup:

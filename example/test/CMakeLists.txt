@@ -23,4 +23,5 @@ package_add_test(TESTNAME test_file_config FILES test_file_config.cpp ../src/con
 package_add_test(TESTNAME test_env_config FILES test_env_config.cpp ../src/config.c)
 package_add_test(TESTNAME test_arg_config FILES test_arg_config.cpp ../src/config.c)
 package_add_test(TESTNAME test_config FILES test_config.cpp ../src/config.c)
-package_add_test(TESTNAME test_util FILES test_util.cpp ../src/util.c)
+#package_add_test(TESTNAME test_util FILES test_util.cpp ../src/util.c)
+package_add_test(TESTNAME test_util FILES test_util.cpp)
