@@ -48,7 +48,11 @@ if (WIN32)
       INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/extern/libconfig/lib"
   )
 else()
-  find_library(FWLIB NAMES fwlib32 HINTS "${CMAKE_SOURCE_DIR}/../" REQUIRED)
+  find_library(FWLIB NAMES fwlib32 libfwlib32 HINTS "${CMAKE_SOURCE_DIR}/../" REQUIRED)
+  add_library(fwlib32 SHARED IMPORTED)
+  set_target_properties(fwlib32 PROPERTIES
+    IMPORTED_LOCATION "${FWLIB}"
+    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/../")
 endif()
 
 add_subdirectory(src)

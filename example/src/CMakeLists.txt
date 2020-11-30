@@ -1,13 +1,14 @@
 add_executable(fanuc_example main.c)
 
+set(DEPS "fwlib32" "config")
 if (UNIX)
   if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
     set_target_properties(fanuc_example PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
   endif()
-  target_link_libraries(fanuc_example m pthread)
+  list(APPEND DEPS "m" "pthread")
 endif()
 
-target_link_libraries(fanuc_example fwlib32 config)
+target_link_libraries(fanuc_example ${DEPS})
 
 if (WIN32)
   # copy dependency dlls

@@ -6,6 +6,7 @@
 #include "./config.h"
 
 int retrieve_id(Config *conf, char *cncID) {
+  int allocated = 0;
   int ret = 0;
   unsigned short libh;
   uint32_t cnc_ids[4];
@@ -23,6 +24,7 @@ int retrieve_id(Config *conf, char *cncID) {
     ret = 1;
     goto cleanup;
   }
+  allocated = 1;
 
   if (cnc_rdcncid(libh, (unsigned long *)cnc_ids) != EW_OK) {
     fprintf(stderr, "Failed to read cnc id!\n");
@@ -34,7 +36,7 @@ int retrieve_id(Config *conf, char *cncID) {
           cnc_ids[3]);
 
 cleanup:
-  if (cnc_freelibhndl(libh) != EW_OK)
+  if (allocated && cnc_freelibhndl(libh) != EW_OK)
     fprintf(stderr, "Failed to free library handle!\n");
 #ifndef _WIN32
   cnc_exitprocess();
