@@ -32,14 +32,14 @@ jobs:
     - name: Configure CMake
       working-directory: ${{runner.workspace}}/example/build
       shell: powershell
-      run: cmake -A Win32 -DCMAKE_BUILD_TYPE=$BUILD_TYPE $env:GITHUB_WORKSPACE/example
+      run: cmake -A Win32 -DCMAKE_BUILD_TYPE=$env:BUILD_TYPE $env:GITHUB_WORKSPACE/example
 
     - name: Build
       working-directory: ${{runner.workspace}}/example/build
       shell: powershell
-      run: cmake --build . --config $BUILD_TYPE
+      run: cmake --build . --config $env:BUILD_TYPE
 
     - name: Test
       working-directory: ${{runner.workspace}}/example/build
       shell: powershell
-      run: ctest -C $BUILD_TYPE -V
+      run: ctest -V -C $env:BUILD_TYPE
