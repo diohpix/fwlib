@@ -3,6 +3,7 @@ name: CMake
 on:
   push:
     paths:
+    - '.github/workflows/cmake.yml'
     - 'example/**'
 
 env:
