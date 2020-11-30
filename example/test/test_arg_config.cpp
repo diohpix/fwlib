@@ -12,6 +12,8 @@ TEST(Config, ArgConfigWorks) {
   EXPECT_STREQ(conf.ip, "1.2.3.4") << "unexpected ip";
   EXPECT_EQ(conf.port, 1234) << "unexpected ip";
 
+#ifdef _WIN32
+#else
   // test valid args
   optind = 1;  // reset global arg index
   const char *test_args_1[] = {"test_arg_config", "--port=2345", "--ip=2.3.4.5"};
@@ -28,4 +30,5 @@ TEST(Config, ArgConfigWorks) {
 
   EXPECT_STREQ(conf.ip, INIT_VALUE.ip) << "ip should be unmodified";
   EXPECT_EQ(conf.port, INIT_VALUE.port) << "port should be unmodified";
+#endif
 }
