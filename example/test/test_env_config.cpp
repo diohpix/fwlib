@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../src/config.h"
 #include "gtest/gtest.h"
+extern "C" {
+  #include "../src/config.h"
+}
 
 #ifdef _WIN32
 #define unset_env(k) _putenv_s(k, "");

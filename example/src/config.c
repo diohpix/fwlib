@@ -8,8 +8,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-const Config default_config = {"127.0.0.1", 8193};
-
 #ifdef _WIN32
 int read_arg_config(int argc, char *argv[], Config *conf) {
   char ip[100] = "";

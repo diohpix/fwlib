@@ -1,3 +1,6 @@
+#ifndef FW_UTIL_H
+#define FW_UTIL_H
+
 #include "./config.h"
 
 /* unclear why this is required (else "error: overloaded function with no contextual type information")*/
@@ -14,4 +17,5 @@ short cnc_allclibhndl3(const char *, unsigned short, long, unsigned short *);
 short cnc_freelibhndl(unsigned short);
 #endif
 
-int retrieve_id(Config *conf, char *cncID);
+int retrieve_id(Config *, char *);
+#endif

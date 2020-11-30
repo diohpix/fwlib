@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../src/config.c"
 #include "gtest/gtest.h"
+extern "C" {
+  #include "../src/config.h"
+}
 
 static Config INIT_VALUE = {"1.2.3.4", 1234};
 

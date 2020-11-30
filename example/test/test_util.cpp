@@ -1,8 +1,8 @@
 #define TESTING 1
 
 extern "C" {
-#include "../src/config.h"
-#include "../src/util.h"
+  #include "../src/config.h"
+  #include "../src/util.h"
 }
 
 #include "../extern/fff/fff.h"
