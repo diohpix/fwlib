@@ -17,16 +17,13 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Login
-      shell: powershell
       env:
         DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      run: $env:DOCKERHUB_PASSWORD | docker login --username ${env:DOCKERHUB_USERNAME} --password-stdin
+      run: $Env:DOCKERHUB_PASSWORD | docker login --username $Env:DOCKERHUB_USERNAME --password-stdin
 
     - name: Build
-      shell: powershell
       run: docker build . -f windows.Dockerfile -t ${env:DOCKER_IMAGE_TAG}
 
     - name: Push
-      shell: powershell
       run: docker push ${env:DOCKER_IMAGE_TAG}
