@@ -3,7 +3,7 @@ name: WindowsImage
 on:
   push:
     paths:
-      - '.github/workflows/image.yml'
+      - '.github/workflows/windows-image.yml'
       - 'windows.Dockerfile'
 
 env:
@@ -21,7 +21,7 @@ jobs:
       env:
         DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      run: Write-Output ${env:DOCKERHUB_PASSWORD} | docker login --username ${env:DOCKERHUB_USERNAME} --password-stdin
+      run: $env:DOCKERHUB_PASSWORD | docker login --username ${env:DOCKERHUB_USERNAME} --password-stdin
 
     - name: Build
       shell: powershell
