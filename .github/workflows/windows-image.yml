@@ -8,16 +8,19 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v2
 
     - name: Login
-      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+      shell: powershell
+      run: Write-Output ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
     - name: Build
-      run: docker build . -f windows.Dockerfile -t $DOCKER_IMAGE_TAG
+      shell: powershell
+      run: docker build . -f windows.Dockerfile -t $Env:DOCKER_IMAGE_TAG
 
     - name: Push
-      run: docker push $DOCKER_IMAGE_TAG
+      shell: powershell
+      run: docker push $Env:DOCKER_IMAGE_TAG
