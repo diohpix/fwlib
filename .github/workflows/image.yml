@@ -2,6 +2,10 @@ name: Image
 
 on:
   push:
+    paths:
+      - '.github/workflows/image.yml'
+      - 'Dockerfile'
+      - 'install.sh'
 
 env:
   DOCKER_IMAGE_TAG: strangesast/fwlib
