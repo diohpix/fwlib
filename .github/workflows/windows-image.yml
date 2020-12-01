@@ -23,7 +23,9 @@ jobs:
       run: $Env:DOCKERHUB_PASSWORD | docker login --username $Env:DOCKERHUB_USERNAME --password-stdin
 
     - name: Build
-      run: docker build . -f windows.Dockerfile -t ${env:DOCKER_IMAGE_TAG}
+      env:
+        TAG: ltsc
+      run: docker build . --build-arg TAG=${env:TAG} -f windows.Dockerfile -t ${env:DOCKER_IMAGE_TAG}
 
     - name: Push
       run: docker push ${env:DOCKER_IMAGE_TAG}
