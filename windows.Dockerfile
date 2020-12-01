@@ -1,4 +1,4 @@
-from windows/servercore:20H2
+from mcr.microsoft.com/windows/servercore
 
 workdir /fwlib
 
