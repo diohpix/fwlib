@@ -1,4 +1,4 @@
-name: CMake
+name: WindowsImage
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
       run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
     - name: Build
-      run: docker build . -f Dockerfile -t $DOCKER_IMAGE_TAG
+      run: docker build . -f windows.Dockerfile -t $DOCKER_IMAGE_TAG
 
     - name: Push
       run: docker push $DOCKER_IMAGE_TAG
