@@ -15,7 +15,11 @@ jobs:
 
     - name: Login
       shell: powershell
-      run: Write-Output ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+      env:
+        DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      run: |
+        Write-Output $Env:DOCKERHUB_PASSWORD | docker login -u $Env:DOCKERHUB_USERNAME --password-stdin
 
     - name: Build
       shell: powershell
