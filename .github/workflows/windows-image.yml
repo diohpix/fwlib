@@ -24,7 +24,7 @@ jobs:
 
     - name: Build
       env:
-        TAG: ltsc2019
+        TAG: 1809
       run: docker build . --build-arg TAG=${env:TAG} -f windows.Dockerfile -t ${env:DOCKER_IMAGE_TAG}
 
     - name: Push
